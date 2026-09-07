@@ -6,7 +6,7 @@ export default function CollegeList({ collegeSearch }) {
 
   useEffect(() => {
 
-    console.log("fetching.....")
+    
     const timer = setTimeout(() => {
         fetch(`http://127.0.0.1:8000/colleges?search=${collegeSearch}`)
       .then((res) => res.json())
@@ -17,7 +17,7 @@ export default function CollegeList({ collegeSearch }) {
         console.error(error);
       });
       console.log("fetched")
-    }, 500);
+    }, 1000);
 
     return ()=> clearTimeout(timer);
     

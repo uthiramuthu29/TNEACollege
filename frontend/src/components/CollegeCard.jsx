@@ -1,7 +1,10 @@
+import { useState } from "react";
 import CollegeCardImg from "../assets/Background.png";
-import { ChevronDown } from "lucide-react"
+import { ChevronDown } from "lucide-react";
 
 export default function CollegeCard({ college }) {
+  const [viewCutoff, setViewCutoff] = useState(false);
+
   return (
     <div className="college-card bg-white border border-[#C4C6CF] rounded-2xl p-6 ">
       <img className="mb-6" src={CollegeCardImg} />
@@ -16,27 +19,33 @@ export default function CollegeCard({ college }) {
           {college.district}
         </h3>
         <div className="flex justify-end">
-          <button className="flex text-[12px] font-inter font-semibold leading-4 text-white bg-[#002045] rounded-xl px-6 py-2.5 ">
+          <button
+            onClick={() => setViewCutoff(true)}
+            className="flex text-[12px] font-inter font-semibold leading-4 text-white bg-[#002045] rounded-xl px-6 py-2.5 "
+          >
             View Cutoff <ChevronDown size={16} />
           </button>
         </div>
       </div>
-      <table>
-        <thead>
+      {viewCutoff && (
+        <table>
+          <thead>
             <tr>
-                <th>Department</th>
-                <th>Cutoff</th>
+              <th>Department</th>
+              <th>Cutoff</th>
             </tr>
-        </thead>
-        <tbody>
-          {college.branches && college.branches.map((branch, index) => (
-            <tr key={branch.branch_code || index}>
-                <td>{branch.branch_name}</td>
-                <td>{branch.oc_cutoff}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {college.branches &&
+              college.branches.map((branch, index) => (
+                <tr key={branch.branch_code || index}>
+                  <td>{branch.branch_name}</td>
+                  <td>{branch.oc_cutoff}</td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 }
