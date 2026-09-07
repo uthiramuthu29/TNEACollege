@@ -1,7 +1,7 @@
 export default function Search( {collegeSearch, setCollegeSearch} ) {
     
   return (
-    <div className="flex flex-col gap-4 pt-6">
+    <div className="flex flex-col gap-4">
       <input
         type="text"
         placeholder="Search college name or code.."
