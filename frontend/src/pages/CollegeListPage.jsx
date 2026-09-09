@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Search from "../components/Search";
+import CollegeSearch from "../components/CollegeSearch";
 import CollegeList from "../components/CollegeList";
 
 export default function CollegeListPage(){
@@ -8,7 +8,7 @@ export default function CollegeListPage(){
 
     return (
         <main className="px-4 py-6">
-            <Search collegeSearch={collegeSearch} setCollegeSearch={setCollegeSearch} />
+            <CollegeSearch collegeSearch={collegeSearch} setCollegeSearch={setCollegeSearch} />
             <CollegeList collegeSearch={collegeSearch} />
         </main>
     );

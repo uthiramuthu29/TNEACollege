@@ -31,7 +31,7 @@ export default function CollegeList({ collegeSearch }) {
         { collegeSearch.trim() ?
             displayedColleges.map((college)=>(
                 <CollegeCard key={college.code} college={college} />
-            )) : ( <p className="text-center">Search a college</p> )
+            )) : ( <p className="text-center text-[#74777F] text-[14px] ">Search a college</p> )
         }
       </div>
     </>
