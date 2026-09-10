@@ -7,9 +7,9 @@ export default function CollegeListPage(){
     const [collegeSearch, setCollegeSearch] = useState("")
 
     return (
-        <main className="px-4 py-6">
+        <div>
             <CollegeSearch collegeSearch={collegeSearch} setCollegeSearch={setCollegeSearch} />
             <CollegeList collegeSearch={collegeSearch} />
-        </main>
+        </div>
     );
 }
