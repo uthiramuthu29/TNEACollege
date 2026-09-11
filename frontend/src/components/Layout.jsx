@@ -1,10 +1,12 @@
 import { Outlet } from "react-router";
+import Header from "./Header";
 import Navbar from "./Navbar";
 
 export default function Layout() {
   return (
-    <div className="px-4 py-6">
-      <main>
+    <div className=" relative">
+      <Header />
+      <main className="px-4 py-6">
         <Outlet />
       </main>
       <Navbar />
