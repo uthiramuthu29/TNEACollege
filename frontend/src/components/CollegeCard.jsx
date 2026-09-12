@@ -21,16 +21,16 @@ export default function CollegeCard({ college }) {
         <span className="text-[10px] font-inter leading-3.75 text-[#005231] bg-[#9FF5C1] rounded-sm px-1 py-1 ">
           {college.code}
         </span>
-        <h2 className="text-[20px] font-plus-jakarta leading-7 text-[#002045] font-semibold mt-2.5 mb-2.5 wrap-break-word ">
+        <h2 className="text-[20px] font-plus leading-7 text-[navy-dark] font-semibold mt-2.5 mb-2.5 wrap-break-word ">
           {college.name}
         </h2>
-        <h3 className="text-[14px] flex items-center gap-1 font-plus-jakarta leading-6 text-[#43474E]">
+        <h3 className="text-[14px] flex items-center gap-1 font-arta leading-6 text-[#43474E]">
         <MapPin size={14} />{college.district}
         </h3>
         <div className="flex justify-end">
           <button
             onClick={() => setViewCutoff((prev) => !prev)}
-            className="flex gap-2.5 text-[12px] font-inter font-semibold leading-4 text-white bg-[#002045] rounded-xl px-6 py-2.5 "
+            className="flex gap-2.5 text-[12px] font-inter font-semibold leading-4 text-white bg-[navy-dark] rounded-xl px-6 py-2.5 "
           >
             View Cutoffs
             <motion.div

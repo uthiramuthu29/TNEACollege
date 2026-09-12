@@ -17,7 +17,7 @@ export default function CollegeSearch({ collegeSearch, setCollegeSearch }) {
       <button className="text-[#86A0CD] flex justify-center items-center gap-3 text-[12px] leading-4 bg-[#1A365D] w-full py-3 font-inter font-semibold rounded-xl ">
       <SlidersHorizontal size={18} />Advanced Filters
       </button>
-      {/* <button className="text-[#002045] text-[12px] leading-4 bg-white w-full py-3 font-inter font-semibold rounded-xl border border-mist-300 ">
+      {/* <button className="text-[navy-dark] text-[12px] leading-4 bg-white w-full py-3 font-inter font-semibold rounded-xl border border-mist-300 ">
         Search
       </button> */}
     </div>

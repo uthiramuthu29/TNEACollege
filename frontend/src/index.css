@@ -5,7 +5,10 @@
 
 @theme {
   --font-inter: "Inter", sans-serif;
-  --font-plus-jakarta: "Plus Jakarta Sans", sans-serif;
+  --font-plus: "Plus Jakarta Sans", sans-serif;
+  --color-navy-dark: #002045;
+  --text-page-title: 24px;
+  --text-page-title--line-height: 32px;
 }
 
 body {
