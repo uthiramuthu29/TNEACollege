@@ -4,11 +4,19 @@
 
 
 @theme {
+  /*fonts*/
   --font-inter: "Inter", sans-serif;
   --font-plus: "Plus Jakarta Sans", sans-serif;
+
+  /* colors */
   --color-navy-dark: #002045;
-  --text-page-title: 24px;
-  --text-page-title--line-height: 32px;
+  --color-light-black: #181C1E;
+  --color-blackish-ash: #43474E;
+  --color-light-green: #9FF5C1;
+  --color-dark-green: #167249;
+  --color-ash-border: #C4C6CF;
+  
+  
 }
 
 body {

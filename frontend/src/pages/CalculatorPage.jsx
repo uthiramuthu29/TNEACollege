@@ -1,7 +1,13 @@
-export default function CalculatorPage(){
-    return(
+import { PageHeading, PagePara } from "../resuableChunks/Typography";
+
+export default function CalculatorPage() {
+    return (
         <div className="">
-            Calci
+            <div className="intro mb-8 ">
+                <PageHeading>Cutoff Calculator</PageHeading>
+                <PagePara>Calculate your TNEA aggregate score out of
+                    200 based on your HSC board marks.</PagePara>
+            </div>
         </div>
     )
 }

@@ -1,6 +1,8 @@
 import { Calculator, Search } from "lucide-react";
 import { Link } from "react-router";
 import Schedule from '../components/Schedule'
+import { PageHeading, PagePara } from "../resuableChunks/Typography";
+import TrendingColleges from "../components/TrendingColleges";
 
 function HomeNavCard({ title, desc, color, bgColor, icon: Icon }) {
   return (
@@ -26,13 +28,9 @@ export default function HomePage() {
   return (
     <div className="">
       <div className="welcome mb-8 ">
-        <h2 className="text-[24px] leading-8 font-bold font-plus text-navy-dark mb-2 ">
-          Welcome, Student
-        </h2>
-        <p className="text-[14px] leading-5 font-inter text-[#43474E] ">
-          Your trusted companion for TNEA 2024. Navigate the counselling process
-          with expert data and precision.
-        </p>
+        <PageHeading>Welcome, Student</PageHeading>
+        <PagePara>Your trusted companion for TNEA 2024. Navigate the counselling process
+          with expert data and precision.</PagePara>
       </div>
       <div className="flex gap-4 mb-8">
         <HomeNavCard
@@ -51,6 +49,7 @@ export default function HomePage() {
         />
       </div>
       <Schedule />
+      <TrendingColleges />
     </div>
   );
 }

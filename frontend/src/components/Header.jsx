@@ -3,7 +3,7 @@ import {  Link } from "react-router";
 
 export default function Header() {
   return (
-    <header className="p-4 border-b border-b-[#C4C6CF]">
+    <header className="p-4 bg-[#F7FAFC] border-b border-b-ash-border fixed w-full ">
       <div className="flex justify-between items-center ">
         <Link to='/' className="logo flex items-center gap-2 text-[navy-dark] ">
           <GraduationCap size={22} />

@@ -6,7 +6,7 @@ export default function Layout() {
   return (
     <div className=" relative">
       <Header />
-      <main className="px-4 py-6">
+      <main className="px-4 pt-20 pb-40 ">
         <Outlet />
       </main>
       <Navbar />
