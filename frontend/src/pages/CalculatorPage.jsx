@@ -1,3 +1,4 @@
+import CutoffCalculator from "../components/CutoffCalculator";
 import { PageHeading, PagePara } from "../resuableChunks/Typography";
 
 export default function CalculatorPage() {
@@ -8,6 +9,7 @@ export default function CalculatorPage() {
                 <PagePara>Calculate your TNEA aggregate score out of
                     200 based on your HSC board marks.</PagePara>
             </div>
+            <CutoffCalculator />
         </div>
     )
 }

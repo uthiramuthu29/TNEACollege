@@ -10,9 +10,9 @@ export default function Navbar() {
   ];
   return (
     <div className="fixed bottom-0 w-full bg-[#F7FAFC] ">
-      <ul className="flex p-4 border-t border-t-[#C4C6CF] ">
+      <ul className="flex p-4 border-t border-t-ash-border ">
         {navLinks.map((navLink) => (
-          <NavLink to={navLink.link} key={navLink.id} className="text-[12px] text-[#43474E] font-inter font-semibold leading-4 px-5 py-1 ">
+          <NavLink to={navLink.link} key={navLink.id} className="text-[12px] text-blackish-ash font-inter font-semibold leading-4 px-5 py-1 ">
             {navLink.icon}
             {navLink.name}
           </NavLink>

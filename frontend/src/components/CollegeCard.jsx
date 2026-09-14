@@ -15,16 +15,16 @@ export default function CollegeCard({ college }) {
   };
 
   return (
-    <div className="college-card bg-white border border-[#C4C6CF] rounded-2xl p-6 ">
+    <div className="college-card bg-white border border-ash-border rounded-2xl p-6 ">
       <img className="mb-6" src={CollegeCardImg} />
       <div className="content">
-        <span className="text-[10px] font-inter leading-3.75 text-[#005231] bg-[#9FF5C1] rounded-sm px-1 py-1 ">
+        <span className="text-[10px] font-inter leading-3.75 text-[#005231] bg-light-green rounded-sm px-1 py-1 ">
           {college.code}
         </span>
         <h2 className="text-[20px] font-plus leading-7 text-[navy-dark] font-semibold mt-2.5 mb-2.5 wrap-break-word ">
           {college.name}
         </h2>
-        <h3 className="text-[14px] flex items-center gap-1 font-arta leading-6 text-[#43474E]">
+        <h3 className="text-[14px] flex items-center gap-1 font-arta leading-6 text-blackish-ash">
         <MapPin size={14} />{college.district}
         </h3>
         <div className="flex justify-end">
