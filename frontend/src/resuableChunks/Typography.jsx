@@ -23,6 +23,6 @@ export function SubHeading({ children, className = "" }) {
 
 export function GreenPill({ children, className="" }) {
     return (
-        <p className="text-[10px] leading-5 font-inter font-bold text-dark-green bg-light-green rounded-lg px-2 py-1 ml-auto " >{children}</p>
+        <p className={`text-[10px] leading-5 font-inter font-bold text-dark-green bg-light-green rounded-lg px-2 py-1 ml-auto ${className}`} >{children}</p>
     );
 }

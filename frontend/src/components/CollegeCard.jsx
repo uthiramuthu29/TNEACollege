@@ -30,7 +30,7 @@ export default function CollegeCard({ college }) {
         <div className="flex justify-end">
           <button
             onClick={() => setViewCutoff((prev) => !prev)}
-            className="flex gap-2.5 text-[12px] font-inter font-semibold leading-4 text-white bg-[navy-dark] rounded-xl px-6 py-2.5 "
+            className="flex gap-2.5 text-[12px] font-inter font-semibold leading-4 text-white bg-navy-dark rounded-xl px-6 py-2.5 "
           >
             View Cutoffs
             <motion.div

@@ -1,4 +1,5 @@
 import CutoffCalculator from "../components/CutoffCalculator";
+import HowFormula from "../components/HowFormula";
 import { PageHeading, PagePara } from "../resuableChunks/Typography";
 
 export default function CalculatorPage() {
@@ -10,6 +11,7 @@ export default function CalculatorPage() {
                     200 based on your HSC board marks.</PagePara>
             </div>
             <CutoffCalculator />
+            <HowFormula />
         </div>
     )
 }
