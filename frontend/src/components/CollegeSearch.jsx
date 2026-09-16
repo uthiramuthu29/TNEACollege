@@ -8,7 +8,7 @@ export default function CollegeSearch({ collegeSearch, setCollegeSearch }) {
         <input
           type="text"
           placeholder="Search college name or code.."
-          className="text-[14px] text-[#6B7280] bg-white border border-[#C4C6CF] rounded-xl pl-10 pr-3 py-3 w-full"
+          className="text-[14px] text-[#6B7280] bg-white border border-ash-border rounded-xl pl-10 pr-3 py-3 w-full"
           onChange={(e) => setCollegeSearch(e.target.value)}
           value={collegeSearch}
         />

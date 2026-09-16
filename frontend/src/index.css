@@ -14,9 +14,7 @@
   --color-blackish-ash: #43474E;
   --color-light-green: #9FF5C1;
   --color-dark-green: #167249;
-  --color-ash-border: #C4C6CF;
-  
-  
+  --color-ash-border: #C4C6CF; 
 }
 
 body {
@@ -36,4 +34,8 @@ body {
 .cutoff-table th, td{
   padding: 6px;
   text-align: center;
+}
+
+input:focus-visible{
+  outline: none;
 }

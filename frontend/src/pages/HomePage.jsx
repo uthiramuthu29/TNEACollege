@@ -4,11 +4,12 @@ import Schedule from '../components/Schedule'
 import { PageHeading, PagePara } from "../resuableChunks/Typography";
 import TrendingColleges from "../components/TrendingColleges";
 
-function HomeNavCard({ title, desc, color, bgColor, icon: Icon }) {
+function HomeNavCard({ title, desc, color, bgColor, icon: Icon, link }) {
   return (
     <Link
       style={{ backgroundColor: bgColor }}
       className=" rounded-xl block w-full p-6 "
+      to={link}
     >
       <Icon color={color} className="mb-2" />
       <h3
@@ -39,6 +40,7 @@ export default function HomePage() {
           color="#ffffff"
           bgColor="#1A365D"
           icon={Calculator}
+          link='cutoff-calc'
         />
         <HomeNavCard
           title="College Search"
@@ -46,6 +48,7 @@ export default function HomePage() {
           color="#167249"
           bgColor="#9FF5C1"
           icon={Search}
+          link='colleges'
         />
       </div>
       <Schedule />

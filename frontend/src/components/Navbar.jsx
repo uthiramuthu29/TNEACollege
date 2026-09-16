@@ -12,7 +12,7 @@ export default function Navbar() {
     <div className="fixed bottom-0 w-full bg-[#F7FAFC] ">
       <ul className="flex p-4 border-t border-t-ash-border ">
         {navLinks.map((navLink) => (
-          <NavLink to={navLink.link} key={navLink.id} className="text-[12px] text-blackish-ash font-inter font-semibold leading-4 px-5 py-1 ">
+          <NavLink to={navLink.link} key={navLink.id} className={({isActive})=> `${isActive ? "text-[#86A0CD] bg-navy-dark rounded-4xl " : "text-blackish-ash bg-transparent "} text-[12px] font-inter font-semibold leading-4 px-5 py-1`}>
             {navLink.icon}
             {navLink.name}
           </NavLink>
