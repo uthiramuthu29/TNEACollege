@@ -1,27 +1,31 @@
 import { GreenPill } from "../resuableChunks/Typography";
 import AnnaUniv from '../assets/anna-univ.png'
 import { Star, MapPin } from 'lucide-react';
+import { getHighestCutoff } from "../utils";
 
-export function TrendingCollegesCard({ title, rating, location }) {
+export function TrendingCollegesCard({ college, rank }) {
+
+  const higherCutoff = getHighestCutoff(college);
+  
   return(
-    <li className="flex items-center bg-white border border-ash-border p-4 rounded-xl gap-4 ">
+    <li className="flex items-center bg-white border border-ash-border p-4 rounded-xl gap-4 mb-3 ">
       <img className="w-16 rounded-lg " src={AnnaUniv} />
       <div className="block">
         <h5 className="text-[14px] leading-5 text-light-black font-plus mb-1  ">
-          {title}
+          {college.name}
         </h5>
         <div className="flex gap-3 ">
           <span className="text-[14px] leading-5 text-blackish-ash font-inter font-medium flex items-center gap-1 ">
             <Star size={10} />
-            {rating}
+            {higherCutoff}
           </span>
           <span className="text-[14px] leading-5 text-blackish-ash font-inter font-medium flex items-center gap-1 ">
             <MapPin size={10} />
-            {location}
+            {college.district}
           </span>
         </div>
       </div>
-      <GreenPill>#1</GreenPill>
+      <GreenPill>#{rank}</GreenPill>
     </li>
   );
 }
