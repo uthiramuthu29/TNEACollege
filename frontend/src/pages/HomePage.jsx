@@ -2,7 +2,7 @@ import { Calculator, Search } from "lucide-react";
 import { Link } from "react-router";
 import Schedule from '../components/Schedule'
 import { PageHeading, PagePara } from "../resuableChunks/Typography";
-import TrendingColleges from "../components/TrendingColleges";
+import TopColleges from "../components/TopColleges";
 
 function HomeNavCard({ title, desc, color, bgColor, icon: Icon, link }) {
   return (
@@ -52,7 +52,7 @@ export default function HomePage() {
         />
       </div>
       <Schedule />
-      <TrendingColleges />
+      <TopColleges />
     </div>
   );
 }
