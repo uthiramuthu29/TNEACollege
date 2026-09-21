@@ -1,43 +1,31 @@
 import { Search } from "lucide-react";
-
-function CutoffInput({ subject }) {
-  return (
-    <div className="mb-6 ">
-      <div className="flex mb-2.5 justify-between ">
-        <h4 className="text-[12px] leading-4 font-inter font-semibold text-blackish-ash uppercase ">
-          {subject}
-        </h4>
-        <p className="text-[14px] leading-5 font-inter font-medium text-navy-dark">
-          Max: 100
-        </p>
-      </div>
-      <div className="relative">
-        <input
-          className="bg-[#F7FAFC] w-full font-plus text-[20px] font-semibold text-blackish-ash border-2 border-ash-border rounded-lg px-4.5 py-4  "
-          type="number"
-          placeholder="0"
-        />
-        <span className="text-[16px] leading-6 font-inter text-blackish-ash absolute top-1/3 right-4.5 ">
-          /100
-        </span>
-      </div>
-    </div>
-  );
-}
+import { useState } from "react";
+import { CutoffInput } from "../resuableChunks/FormFields";
 
 export default function CutoffCalculator() {
+  
+  const [maths, setMaths] = useState("");
+  const [physics, setPhysics] = useState("");
+  const [chemistry, setChemistry] = useState("");
+
+  const mScore = parseFloat(maths) || 0;
+  const pScore = parseFloat(physics) || 0;
+  const cScore = parseFloat(chemistry) || 0;
+
+  const tneaCutoffScore = (mScore + ( pScore / 2 ) + ( cScore / 2 )).toFixed(2);
+
   return (
     <div className="bg-white border border-ash-border rounded-xl p-6 mb-8 ">
-      <CutoffInput subject="Mathematics" />
-      <CutoffInput subject="Physics" />
-      <CutoffInput subject="Chemistry" />
+      <CutoffInput subject="Mathematics" value={maths} onMarksChange={setMaths} />
+      <CutoffInput subject="Physics" value={physics} onMarksChange={setPhysics} />
+      <CutoffInput subject="Chemistry" value={chemistry} onMarksChange={setChemistry}  />
 
       <div className="score bg-navy-dark rounded-xl p-8 ">
         <p className="text-[12px] leading-4 font-semibold font-inter text-[#86A0CD] mb-2.5 text-center  ">
           YOUR TNEA CUTOFF SCORE
         </p>
         <h2 className="text-[60px] leading-14.75 font-normal font-plus text-white mb-4 flex justify-center items-center  ">
-          0.00
+          {tneaCutoffScore}
           <span className="text-[16px] leading-6 text-[#86A0CD] ml-2 ">
             / 200
           </span>

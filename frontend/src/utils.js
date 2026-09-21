@@ -4,3 +4,5 @@ export const getHighestCutoff = (college) => {
     const cutoffs = college.branches.map((branch) => branch.oc_cutoff || 0);
     return Math.max(...cutoffs);
   };
+
+  export const communityList = ["OC", "BC", "BCM", "MBC", "SC", "SCA", "ST"];

@@ -3,7 +3,7 @@ import AnnaUniv from '../assets/anna-univ.png'
 import { Star, MapPin } from 'lucide-react';
 import { getHighestCutoff } from "../utils";
 
-export function TrendingCollegesCard({ college, rank }) {
+export function TopCollegesCard({ college, rank }) {
 
   const higherCutoff = getHighestCutoff(college);
   
