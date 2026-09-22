@@ -1,5 +1,6 @@
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
 
 export function CutoffInput({ subject, value, onMarksChange }) {
   function handleInputChange(e) {
@@ -34,29 +35,55 @@ export function CutoffInput({ subject, value, onMarksChange }) {
   );
 }
 
-export function CustomDropdown({
-  value,
-  onChange,
-  options,
-  placeholder = "Select a year",
-}) {
+export function CustomDropdown({ value, onChange, options, placeholder }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="w-full">
+    <div className="w-full ">
       <button
         type="button"
         onClick={() => setOpen((prev) => !prev)}
-        className="text-[14px] text-[#6B7280] w-full flex justify-between items-center  "
+        className={`text-[14px] text-[#6B7280] w-full flex justify-between items-center px-3.5 py-2 border-ash-border transition-transform duration-500 ${open ? "border-b-0 border rounded-b-none " : "border"} rounded-lg cursor-pointer  `}
       >
         <span>{value || placeholder}</span>
-        <ChevronDown size={16} />
+        <ChevronDown
+          size={16}
+          className={`transition-transform duration-250 ${open ? "rotate-180" : ""} `}
+        />
       </button>
-      <div>
-        <div>
-          <button className="text-[14px] text-[#6B7280]  ">dev</button>
-        </div>
-      </div>
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 1 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.25, ease: "easeInOut" }}
+            className="overflow-hidden"
+          >
+            <div className="grid border border-t-0 rounded-t-none border-ash-border p-2 rounded-lg">
+              {options.map((option) => {
+                const isObject = typeof option === "object";
+
+                const optionLabel = isObject ? option.label : option;
+                const optionValue = isObject ? option.value : option;
+
+                return (
+                  <button
+                    key={optionValue}
+                    className="text-[14px] text-[#6B7280] text-left hover:bg-navy-dark hover:text-white px-1.5 py-1 rounded-sm cursor-pointer "
+                    onClick={() => {
+                      onChange(optionValue);
+                      setOpen(false);
+                    }}
+                  >
+                    {optionLabel}
+                  </button>
+                );
+              })}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
