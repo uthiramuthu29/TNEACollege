@@ -21,6 +21,8 @@ export default function CollegeList({ collegeSearch }) {
   } = useQuery({
     queryKey: ["colleges", debouncedSearch],
     queryFn: () => fetchColleges(debouncedSearch),
+    staleTime: 30 * 60 * 1000,
+    gcTime: 60 * 60 * 1000
   });
 
   const isCurrentlyLoading = isLoading || isFetching;

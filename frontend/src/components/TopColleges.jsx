@@ -8,19 +8,17 @@ import { getHighestCutoff } from "../utils";
 export default function TopColleges() {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const {
-    data: colleges = [],
-    isLoading,
-    isFetching,
-  } = useQuery({
+  const { data: colleges = [], isLoading } = useQuery({
     queryKey: ["colleges", ""],
     queryFn: () => fetchColleges(""),
+    staleTime: 30 * 60 * 1000,
+    gcTime: 60 * 60 * 1000,
     select: (data) =>
       [...data]
         .sort((a, b) => getHighestCutoff(b) - getHighestCutoff(a))
         .slice(0, 10),
   });
-  const isCurrentlyLoading = isLoading || isFetching;
+  const isCurrentlyLoading = isLoading;
 
   const displayedColleges = isExpanded ? colleges : colleges.slice(0, 3);
 
@@ -46,8 +44,11 @@ export default function TopColleges() {
         )}
       </ul>
       {colleges.length > 3 && (
-        <button onClick={()=>setIsExpanded(!isExpanded)} className="text-[12px] leading-4 text-navy-dark font-inter font-semibold underline block mx-auto ">
-          {isExpanded ? 'SHOW LESS' : 'EXPLORE MORE RANKINGS'}
+        <button
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="text-[12px] leading-4 text-navy-dark font-inter font-semibold underline block mx-auto "
+        >
+          {isExpanded ? "SHOW LESS" : "EXPLORE MORE RANKINGS"}
         </button>
       )}
     </div>
