@@ -10,8 +10,8 @@ export function TopCollegesCard({ college, rank }) {
   return(
     <li className="flex items-center bg-white border border-ash-border p-4 rounded-xl gap-4 mb-3 ">
       <img className="w-16 rounded-lg " src={AnnaUniv} />
-      <div className="block">
-        <h5 className="text-[14px] leading-5 text-light-black font-plus mb-1  ">
+      <div className="block ">
+        <h5 className="text-[14px] leading-5 text-light-black font-plus mb-1 wrap-anywhere ">
           {college.name}
         </h5>
         <div className="flex gap-3 ">
