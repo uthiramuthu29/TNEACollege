@@ -1,23 +1,21 @@
 import { Search, SlidersHorizontal } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { fetchBranches, fetchDistricts, fetchYears } from "../api";
+import { fetchBranches, fetchDistricts } from "../api";
 import { communityList } from "../utils";
 import { CustomDropdown } from "../resuableChunks/FormFields";
 import { AnimatePresence, motion } from "motion/react";
 
-export default function CollegeSearch({ collegeSearch, setCollegeSearch }) {
+export default function CollegeSearch({
+  collegeSearchInput,
+  setCollegeSearchInput,
+  setCollegeSearchQuery,
+}) {
   const [openFilters, setOpenFilters] = useState(false);
 
-  const [selectedYear, setSelectedYear] = useState(2025);
   const [selectedDistrict, setSelectedDistrict] = useState("");
   const [selectedBranch, setSelectedBranch] = useState("");
   const [selectedCommunity, setSelectedCommunity] = useState("");
-
-  const { data: years = [] } = useQuery({
-    queryKey: ["years"],
-    queryFn: () => fetchYears(),
-  });
 
   const { data: districts = [] } = useQuery({
     queryKey: ["districts"],
@@ -37,8 +35,8 @@ export default function CollegeSearch({ collegeSearch, setCollegeSearch }) {
           type="text"
           placeholder="Search college name or code.."
           className="text-[14px] text-[#6B7280] bg-white border border-ash-border rounded-xl pl-10 pr-3 py-3 w-full"
-          onChange={(e) => setCollegeSearch(e.target.value)}
-          value={collegeSearch}
+          onChange={(e) => setCollegeSearchInput(e.target.value)}
+          value={collegeSearchInput}
         />
       </div>
 
@@ -51,12 +49,6 @@ export default function CollegeSearch({ collegeSearch, setCollegeSearch }) {
             transition={{ duration: 0.3, ease: "easeOut" }}
           >
             <div className="advanced-filters grid gap-2 p-4 border border-ash-border bg-white rounded-2xl ">
-              <CustomDropdown
-                value={selectedYear}
-                onChange={setSelectedYear}
-                options={years}
-                placeholder="Select a year"
-              />
               <CustomDropdown
                 value={selectedDistrict}
                 onChange={setSelectedDistrict}
@@ -90,9 +82,17 @@ export default function CollegeSearch({ collegeSearch, setCollegeSearch }) {
         <SlidersHorizontal size={18} />
         {openFilters ? "Close Filters" : "Advanced Filters"}
       </button>
-      {/* <button className="text-[navy-dark] text-[12px] leading-4 bg-white w-full py-3 font-inter font-semibold rounded-xl border border-mist-300 ">
+      <button
+        onClick={() => setCollegeSearchQuery({
+          search: collegeSearchInput.trim(),
+          district: selectedDistrict,
+          branch: selectedBranch,
+          community: selectedCommunity
+        })}
+        className="text-[navy-dark] text-[12px] leading-4 bg-white w-full py-3 font-inter font-semibold rounded-xl border border-mist-300 "
+      >
         Search
-      </button> */}
+      </button>
     </div>
   );
 }

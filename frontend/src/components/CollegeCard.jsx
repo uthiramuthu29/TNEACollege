@@ -15,7 +15,13 @@ export default function CollegeCard({ college }) {
   };
 
   return (
-    <div className="college-card bg-white border border-ash-border rounded-2xl p-6 ">
+    <motion.div
+      initial={{ width: 0, opacity: 0, x: -50}}
+      whileInView={{ width: "auto", opacity: 1, x: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.8, ease: [0.25, 1, 0.5, 1] }}
+      className="college-card bg-white border border-ash-border rounded-2xl p-6 "
+    >
       <img className="mb-6" src={CollegeCardImg} />
       <div className="content">
         <span className="text-[10px] font-inter leading-3.75 text-[#005231] bg-light-green rounded-sm px-1 py-1 ">
@@ -25,7 +31,8 @@ export default function CollegeCard({ college }) {
           {college.name}
         </h2>
         <h3 className="text-[14px] flex items-center gap-1 font-arta leading-6 text-blackish-ash">
-        <MapPin size={14} />{college.district}
+          <MapPin size={14} />
+          {college.district}
         </h3>
         <div className="flex justify-end">
           <button
@@ -83,6 +90,6 @@ export default function CollegeCard({ college }) {
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </motion.div>
   );
 }

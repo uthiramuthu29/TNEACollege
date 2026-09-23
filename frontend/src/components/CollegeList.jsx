@@ -1,37 +1,30 @@
-import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import CollegeCard from "./CollegeCard";
 import { fetchColleges } from "../api";
+import { Loader2 } from "lucide-react";
 
-export default function CollegeList({ collegeSearch }) {
-  const [debouncedSearch, setDebouncedSearch] = useState("");
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedSearch(collegeSearch.trim());
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, [collegeSearch]);
-
+export default function CollegeList({ collegeSearchQuery }) {
   const {
     data: colleges = [],
     isLoading,
-    isFetching,
   } = useQuery({
-    queryKey: ["colleges", debouncedSearch],
-    queryFn: () => fetchColleges(debouncedSearch),
+    queryKey: ["colleges", collegeSearchQuery],
+    queryFn: () => fetchColleges(collegeSearchQuery),
     staleTime: 30 * 60 * 1000,
-    gcTime: 60 * 60 * 1000
+    gcTime: 60 * 60 * 1000,
   });
 
-  const isCurrentlyLoading = isLoading || isFetching;
+  const isCurrentlyLoading = isLoading;
 
   return (
     <>
       <div className="college-list mt-6 flex flex-col gap-6 ">
         {isCurrentlyLoading ? (
-          <p className="text-center text-[#74777F] text-[14px]">
+          <p className="text-center px-8 py-15  text-[#74777F] text-[14px]">
+            <Loader2
+              size={22}
+              className="animate-spin text-navy-dark mx-auto mb-2 "
+            />
             Loading colleges...
           </p>
         ) : colleges.length === 0 ? (

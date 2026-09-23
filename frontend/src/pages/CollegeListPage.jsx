@@ -2,14 +2,24 @@ import { useState } from "react";
 import CollegeSearch from "../components/CollegeSearch";
 import CollegeList from "../components/CollegeList";
 
-export default function CollegeListPage(){
+export default function CollegeListPage() {
+  const [collegeSearchInput, setCollegeSearchInput] = useState("");
+  const [collegeSearchQuery, setCollegeSearchQuery] = useState({
+    search: "",
+    district: "",
+    branch: "",
+    community: ""
+  });
 
-    const [collegeSearch, setCollegeSearch] = useState("")
-
-    return (
-        <div>
-            <CollegeSearch collegeSearch={collegeSearch} setCollegeSearch={setCollegeSearch} />
-            <CollegeList collegeSearch={collegeSearch} />
-        </div>
-    );
+  return (
+    <div>
+      <CollegeSearch
+        collegeSearchInput={collegeSearchInput}
+        setCollegeSearchInput={setCollegeSearchInput}
+        collegeSearchQuery={collegeSearchQuery}
+        setCollegeSearchQuery={setCollegeSearchQuery}
+      />
+      <CollegeList collegeSearchQuery={collegeSearchQuery} />
+    </div>
+  );
 }
