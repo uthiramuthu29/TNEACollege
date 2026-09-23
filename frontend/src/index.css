@@ -21,12 +21,12 @@ body {
     background-color: #F7FAFC;
 }
 
-.cutoff-table th{
+.cutoff-table th, .branch-table th{
   font-size: 14px;
   color:#002045;
 }
 
-.cutoff-table td{
+.cutoff-table td, .branch-table td{
   font-size: 12px;
   color: #43474E;
 }
@@ -34,6 +34,10 @@ body {
 .cutoff-table th, td{
   padding: 6px;
   text-align: center;
+}
+
+.branch-table th, td{
+  padding: 6px;
 }
 
 input:focus-visible{

@@ -91,51 +91,138 @@ def get_branches():
 def get_colleges(
     district: Optional[str] = Query(None, description="Filter by district"),
     college_type: Optional[str] = Query(None, description="Filter by college type"),
+    branch: Optional[str] = Query(None, description="Filter by branch code"),
     search: Optional[str] = Query(None, description="Search by college name or code")
 ):
-    """Get all unique colleges with optional search filters. Returns branches from the latest available year."""
+    """Get unique colleges with optional search, district,
+    college type and branch filters.
+    Returns branches from the latest available year.
+    """
     try:
         match_stage = {}
+
         if district:
             match_stage["district"] = district.strip().upper()
+
         if college_type:
             match_stage["college_type"] = college_type.strip().upper()
+
         if search:
             if search.strip().isdigit():
                 match_stage["college_code"] = int(search)
             else:
-                match_stage["college_name"] = {"$regex": search.strip(), "$options": "i"}
+                match_stage["college_name"] = {
+                    "$regex": search.strip(),
+                    "$options": "i"
+                }
 
         pipeline = []
+
         if match_stage:
-            pipeline.append({"$match": match_stage})
+            pipeline.append({
+                "$match": match_stage
+            })
+
+        if branch:
+            pipeline.extend([
+                {
+                    "$group": {
+                        "_id": "$college_code",
+                        "documents": {
+                            "$push": "$$ROOT"
+                        }
+                    }
+                },
+                {
+                    "$project": {
+                        "latest": {
+                            "$arrayElemAt": [
+                                {
+                                    "$sortArray": {
+                                        "input": "$documents",
+                                        "sortBy": {
+                                            "year": -1
+                                        }
+                                    }
+                                },
+                                0
+                            ]
+                        },
+                        "has_branch": {
+                            "$anyElementTrue": {
+                                "$map": {
+                                    "input": "$documents",
+                                    "as": "doc",
+                                    "in": {
+                                        "$in": [
+                                            branch.strip().upper(),
+                                            "$$doc.branches.branch_code"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "$match": {
+                        "has_branch": True
+                    }
+                },
+                {
+                    "$replaceWith": "$latest"
+                }
+            ])
+
+        else:
+            pipeline.extend([
+                {
+                    "$sort": {
+                        "year": -1
+                    }
+                },
+                {
+                    "$group": {
+                        "_id": "$college_code",
+                        "document": {
+                            "$first": "$$ROOT"
+                        }
+                    }
+                },
+                {
+                    "$replaceWith": "$document"
+                }
+            ])
 
         pipeline.extend([
-            {"$sort": {"year": -1}},
-            {"$group": {
-                "_id": "$college_code",
-                "name": {"$first": "$college_name"},
-                "district": {"$first": "$district"},
-                "type": {"$first": "$college_type"},
-                "year": {"$first": "$year"},
-                "branches": {"$first": "$branches"}
-            }},
-            {"$project": {
-                "code": "$_id",
-                "name": 1,
-                "district": 1,
-                "type": 1,
-                "year": 1,
-                "branches": 1,
-                "_id": 0
-            }},
-            {"$sort": {"name": 1}}
+            {
+                "$project": {
+                    "code": "$college_code",
+                    "name": "$college_name",
+                    "district": 1,
+                    "type": "$college_type",
+                    "year": 1,
+                    "branches": 1,
+                    "_id": 0
+                }
+            },
+            {
+                "$sort": {
+                    "name": 1
+                }
+            }
         ])
-        
+
         colleges = list(collection.aggregate(pipeline))
+
         return {"colleges": colleges}
+
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(
+            status_code=500,
+            detail=str(e)
+        )
+
 
 @app.get("/admissions")
 def get_admissions(

@@ -8,7 +8,25 @@ export const getHighestCutoff = (college) => {
   return Math.max(...cutoffs);
 };
 
-export const communityList = ["OC", "BC", "BCM", "MBC", "SC", "SCA", "ST"];
+export const getCollegeRankings = (colleges) => {
+  const cutoffValues = colleges.map((college) =>
+    getHighestCutoff(college)
+  );
+
+  return colleges.map((college) => {
+    const cutoff = getHighestCutoff(college);
+
+    const rank =
+      cutoffValues.filter((value) => value > cutoff).length + 1;
+
+    return {
+      ...college,
+      rank,
+    };
+  });
+};
+
+export const communityList = ["oc", "bc", "bcm", "mbc", "sc", "sca", "st"];
 
 export const navLinks = [
   {
@@ -58,3 +76,19 @@ export function useIsMobile() {
 
   return isMobile;
 }
+
+export const formatCutoff = (value) => {
+  if (value === null || value === undefined || value === "") return "-";
+
+  const truncated = Math.floor(value * 10) / 10;
+
+  return truncated;
+};
+
+export const getTotalInitialSeats = (branch) => {
+
+  return communityList.reduce((total, community)=>
+    total + (branch[`${community}_initial`] || 0),
+    0
+  );
+};

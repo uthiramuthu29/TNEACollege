@@ -19,7 +19,7 @@ export default function CollegeListPage() {
         collegeSearchQuery={collegeSearchQuery}
         setCollegeSearchQuery={setCollegeSearchQuery}
       />
-      <CollegeList collegeSearchQuery={collegeSearchQuery} />
+      <CollegeList collegeSearchQuery={collegeSearchQuery} tneaCutoffQuery={tneaCutoffQuery} />
     </div>
   );
 }

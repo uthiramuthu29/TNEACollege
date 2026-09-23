@@ -2,7 +2,6 @@ import { Search, SlidersHorizontal } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { fetchBranches, fetchDistricts } from "../api";
-import { communityList } from "../utils";
 import { CustomDropdown } from "../resuableChunks/FormFields";
 import { AnimatePresence, motion } from "motion/react";
 
@@ -15,7 +14,6 @@ export default function CollegeSearch({
 
   const [selectedDistrict, setSelectedDistrict] = useState("");
   const [selectedBranch, setSelectedBranch] = useState("");
-  const [selectedCommunity, setSelectedCommunity] = useState("");
 
   const { data: districts = [] } = useQuery({
     queryKey: ["districts"],
@@ -64,12 +62,6 @@ export default function CollegeSearch({
                 }))}
                 placeholder="Select a branch"
               />
-              <CustomDropdown
-                value={selectedCommunity}
-                onChange={setSelectedCommunity}
-                options={communityList}
-                placeholder="Select a category"
-              />
             </div>
           </motion.div>
         )}
@@ -87,7 +79,6 @@ export default function CollegeSearch({
           search: collegeSearchInput.trim(),
           district: selectedDistrict,
           branch: selectedBranch,
-          community: selectedCommunity
         })}
         className="text-[navy-dark] text-[12px] leading-4 bg-white w-full py-3 font-inter font-semibold rounded-xl border border-mist-300 "
       >

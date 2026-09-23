@@ -21,7 +21,7 @@ export function CutoffInput({ subject, value, onMarksChange }) {
       </div>
       <div className="relative">
         <input
-          className="bg-[#F7FAFC] w-full font-plus text-[20px] font-semibold text-blackish-ash border-2 border-ash-border rounded-lg px-4.5 py-4  "
+          className="bg-[#F7FAFC] w-full font-plus text-[16px] font-semibold text-blackish-ash border-2 border-ash-border rounded-lg px-4.5 py-4  "
           type="number"
           placeholder="0"
           onChange={handleInputChange}
@@ -35,7 +35,7 @@ export function CutoffInput({ subject, value, onMarksChange }) {
   );
 }
 
-export function CustomDropdown({ value, onChange, options, placeholder }) {
+export function CustomDropdown({ value, onChange, options, placeholder, className="" }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -43,7 +43,7 @@ export function CustomDropdown({ value, onChange, options, placeholder }) {
       <button
         type="button"
         onClick={() => setOpen((prev) => !prev)}
-        className={`text-[14px] text-[#6B7280] w-full flex justify-between items-center px-3.5 py-2 border-ash-border transition-transform duration-500 ${open ? "border-b-0 border rounded-b-none " : "border"} rounded-lg cursor-pointer  `}
+        className={`text-[14px] text-[#6B7280] w-full flex justify-between items-center px-3.5 py-2 border-ash-border transition-transform duration-500 ${open ? "border-b-0 border rounded-b-none " : "border" } rounded-lg cursor-pointer ${className} `}
       >
         <span>{value || placeholder}</span>
         <ChevronDown
@@ -58,28 +58,30 @@ export function CustomDropdown({ value, onChange, options, placeholder }) {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.25, ease: "easeInOut" }}
-            className="overflow-hidden"
+            className="overflow-hidden "
           >
-            <div className="grid border border-t-0 rounded-t-none border-ash-border p-2 rounded-lg">
-              {options.map((option) => {
-                const isObject = typeof option === "object";
+            <div className="max-h-50 overflow-y-auto border border-t-0 rounded-t-none border-ash-border p-2 rounded-lg">
+              <div className="grid ">
+                {options.map((option) => {
+                  const isObject = typeof option === "object";
 
-                const optionLabel = isObject ? option.label : option;
-                const optionValue = isObject ? option.value : option;
+                  const optionLabel = isObject ? option.label : option;
+                  const optionValue = isObject ? option.value : option;
 
-                return (
-                  <button
-                    key={optionValue}
-                    className="text-[14px] text-[#6B7280] text-left hover:bg-navy-dark hover:text-white px-1.5 py-1 rounded-sm cursor-pointer "
-                    onClick={() => {
-                      onChange(optionValue);
-                      setOpen(false);
-                    }}
-                  >
-                    {optionLabel}
-                  </button>
-                );
-              })}
+                  return (
+                    <button
+                      key={optionValue}
+                      className="text-[14px] uppercase text-[#6B7280] text-left hover:bg-navy-dark hover:text-white px-1.5 py-1 rounded-sm cursor-pointer "
+                      onClick={() => {
+                        onChange(optionValue);
+                        setOpen(false);
+                      }}
+                    >
+                      {optionLabel}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </motion.div>
         )}

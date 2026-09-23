@@ -1,15 +1,13 @@
 const BASE_URL = import.meta.env.VITE_API_URL;
 
-export const fetchColleges = async (search) => {
-  // const params = new URLSearchParams();
+export const fetchColleges = async ({ search, district, branch }) => {
+  const params = new URLSearchParams();
 
-  // if (search) params.set("search", search);
-  // if (year) params.set("year", year);
-  // if (district) params.set("district", district);
-  // if (branch) params.set("branch", branch);
-  // if (community) params.set("community", community);
+  if (search) params.set("search", search);
+  if (district) params.set("district", district);
+  if (branch) params.set("branch", branch);
 
-  const res = await fetch(`${BASE_URL}/colleges?${search}`);
+  const res = await fetch(`${BASE_URL}/colleges?${params.toString()}`);
   if (!res.ok) throw new Error("Failed to fetch colleges");
   const data = await res.json();
   return data.colleges || [];
@@ -34,4 +32,17 @@ export const fetchBranches = async () => {
   if (!res.ok) throw new Error("Failed to fetch branches");
   const data = await res.json();
   return data.branches || [];
+};
+
+
+export const fetchAdmissions = async ({ cutoff, community }) => {
+  const params = new URLSearchParams();
+
+  if (cutoff) params.set("cutoff", cutoff);
+  if (community) params.set("community", community);
+
+  const res = await fetch(`${BASE_URL}/admissions?${params.toString()}`);
+  if (!res.ok) throw new Error("Failed to fetch admissions");
+  const data = await res.json();
+  return data.admissions || [];
 };
