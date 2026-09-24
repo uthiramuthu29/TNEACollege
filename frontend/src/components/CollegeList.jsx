@@ -1,10 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
 import CollegeCard from "./CollegeCard";
-import { fetchColleges } from "../api";
+import { fetchAdmissions, fetchColleges } from "../api";
 import { getCollegeRankings } from "../utils";
 import { Loader2 } from "lucide-react";
+import { useSelector } from "react-redux";
 
-export default function CollegeList({ collegeSearchQuery, tneaCutoffQuery }) {
+export default function CollegeList({ collegeSearchQuery }) {
+
+  const tneaCutoffQuery = useSelector(
+    (state) => state.cutoff
+  );
+
   const {
     data: colleges = [],
     isLoading,
@@ -17,16 +23,31 @@ export default function CollegeList({ collegeSearchQuery, tneaCutoffQuery }) {
 
   const {
     data: admissions = [],
+    isLoading: admissionsLoading,
   } = useQuery({
     queryKey: ["admissions", tneaCutoffQuery],
-    queryFn: () => fetchColleges(tneaCutoffQuery),
+    queryFn: () => fetchAdmissions(tneaCutoffQuery),
+    enabled: Boolean(
+      tneaCutoffQuery.cutoff &&
+      tneaCutoffQuery.community
+    ),
     staleTime: 30 * 60 * 1000,
     gcTime: 60 * 60 * 1000,
   });
 
+  console.log("TNEA Query:", tneaCutoffQuery);
+  console.log("Admissions:", admissions);
+
   const rankedColleges = getCollegeRankings(colleges);
 
-  const isCurrentlyLoading = isLoading;
+  const isCutoffMode = Boolean(
+    tneaCutoffQuery.cutoff &&
+    tneaCutoffQuery.community
+  );
+  
+  const isCurrentlyLoading = isCutoffMode
+    ? admissionsLoading
+    : isLoading;
 
   return (
     <>
@@ -46,7 +67,7 @@ export default function CollegeList({ collegeSearchQuery, tneaCutoffQuery }) {
         ) : (
           rankedColleges.map((college) => (
             <CollegeCard key={college.code} college={college} />
-          )).slice(0, 3)
+          ))
         )}
       </div>
     </>

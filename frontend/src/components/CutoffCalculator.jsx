@@ -2,6 +2,9 @@ import { Search } from "lucide-react";
 import { useState } from "react";
 import { CustomDropdown, CutoffInput } from "../resuableChunks/FormFields";
 import { communityList } from "../utils";
+import { useNavigate } from "react-router"
+import { useDispatch } from "react-redux";
+import { setCutoffQuery } from "../redux/slices/cutoffSlice";
 
 export default function CutoffCalculator() {
   const [selectedCommunity, setSelectedCommunity] = useState("");
@@ -16,10 +19,8 @@ export default function CutoffCalculator() {
 
   const tneaCutoffScore = (mScore + pScore / 2 + cScore / 2).toFixed(2);
 
-  const [tneaCutoffQuery, setTneaCutoffQuery] = useState({
-    cutoff: "",
-    community: ""
-  });
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   return (
     <div className="bg-white border border-ash-border rounded-xl p-6 mb-8 ">
@@ -61,10 +62,18 @@ export default function CutoffCalculator() {
         <p className="text-[14px] leading-5 font-normal font-inter text-[#86A0CD] mb-6 text-center  ">
           Based on standard TNEA weightage formula.
         </p>
-        <button onClick={()=>{setTneaCutoffQuery({
-          cutoff: tneaCutoffScore,
-          community: selectedCommunity
-        })}} className="flex items-center gap-4  text-[16px] leading-7 font-bold font-inter text-center text-navy-dark bg-white px-7.5 py-4 rounded-lg  ">
+        <button
+          onClick={() => {
+            dispatch(
+              setCutoffQuery({
+                cutoff: tneaCutoffScore,
+                community: selectedCommunity,
+              }),
+            );
+            navigate("/colleges")
+          }}
+          className="flex items-center gap-4  text-[16px] leading-7 font-bold font-inter text-center text-navy-dark bg-white px-7.5 py-4 rounded-lg  "
+        >
           <Search size={22} />
           Find Best Matching Colleges
         </button>

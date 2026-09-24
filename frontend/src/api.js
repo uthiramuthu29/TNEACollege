@@ -36,13 +36,30 @@ export const fetchBranches = async () => {
 
 
 export const fetchAdmissions = async ({ cutoff, community }) => {
+  console.log("🔥 fetchAdmissions CALLED");
+  console.log("cutoff:", cutoff);
+  console.log("community:", community);
+
   const params = new URLSearchParams();
 
-  if (cutoff) params.set("cutoff", cutoff);
-  if (community) params.set("community", community);
+  if (cutoff) params.set("max_cutoff", cutoff);
+  if (community) params.set("cutoff_community", community);
 
-  const res = await fetch(`${BASE_URL}/admissions?${params.toString()}`);
-  if (!res.ok) throw new Error("Failed to fetch admissions");
+  const url = `${BASE_URL}/admissions?${params.toString()}`;
+
+  console.log("🔥 Admissions URL:", url);
+
+  const res = await fetch(url);
+
+  console.log("🔥 Response status:", res.status);
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch admissions");
+  }
+
   const data = await res.json();
-  return data.admissions || [];
+
+  console.log("🔥 Admissions response:", data);
+
+  return data.results || [];
 };
