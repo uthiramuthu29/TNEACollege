@@ -235,20 +235,23 @@ def get_admissions(
     cutoff_community: Optional[str] = Query(None, description="Community (oc, bc, mbc, etc.) to filter cutoff on"),
     min_cutoff: Optional[float] = Query(None, description="Minimum cutoff mark"),
     max_cutoff: Optional[float] = Query(None, description="Maximum cutoff mark"),
+    nested: bool = Query(True, description="Whether to return nested college format with yearly data (Option A)"),
     limit: int = Query(50, ge=1, le=500, description="Max documents to return"),
     skip: int = Query(0, ge=0, description="Documents to skip for pagination")
 ):
-    """Retrieve combined admissions data (seats, cutoffs, ranks) based on query parameters by flattening nested data."""
+    """Retrieve combined admissions data (seats, cutoffs, ranks) based on query parameters.
+    Supports returning data nested by college and year (default) or flattened rows.
+    """
     try:
         # Initial match stage for top-level keys
         match_stage = {}
-        if year:
+        if isinstance(year, int):
             match_stage["year"] = year
-        if college_code:
+        if isinstance(college_code, int):
             match_stage["college_code"] = college_code
-        if district:
+        if isinstance(district, str) and district.strip():
             match_stage["district"] = district.strip().upper()
-        if college_type:
+        if isinstance(college_type, str) and college_type.strip():
             match_stage["college_type"] = college_type.strip().upper()
 
         pipeline = []
@@ -260,22 +263,22 @@ def get_admissions(
 
         # Post-unwind match stage for course-level keys and generic search
         post_match = {}
-        if branch_code:
+        if isinstance(branch_code, str) and branch_code.strip():
             post_match["branches.branch_code"] = branch_code.strip().upper()
         
-        if search:
+        if isinstance(search, str) and search.strip():
             post_match["$or"] = [
                 {"college_name": {"$regex": search.strip(), "$options": "i"}},
                 {"branches.branch_name": {"$regex": search.strip(), "$options": "i"}}
             ]
 
-        if cutoff_community:
+        if isinstance(cutoff_community, str) and cutoff_community.strip():
             comm = cutoff_community.strip().lower()
             cutoff_field = f"branches.{comm}_cutoff"
             cutoff_query = {}
-            if min_cutoff is not None:
+            if isinstance(min_cutoff, (int, float)):
                 cutoff_query["$gte"] = min_cutoff
-            if max_cutoff is not None:
+            if isinstance(max_cutoff, (int, float)):
                 cutoff_query["$lte"] = max_cutoff
             if cutoff_query:
                 post_match[cutoff_field] = cutoff_query
@@ -283,56 +286,115 @@ def get_admissions(
         if post_match:
             pipeline.append({"$match": post_match})
 
-        # Project and flatten fields to match original schema
-        pipeline.append({
-            "$project": {
-                "year": 1,
-                "college_code": 1,
-                "college_name": 1,
-                "district": 1,
-                "college_type": 1,
-                "branch_code": "$branches.branch_code",
-                "branch_name": "$branches.branch_name",
-                "oc_initial": "$branches.oc_initial",
-                "oc_filled": "$branches.oc_filled",
-                "oc_cutoff": "$branches.oc_cutoff",
-                "oc_rank": "$branches.oc_rank",
-                "bc_initial": "$branches.bc_initial",
-                "bc_filled": "$branches.bc_filled",
-                "bc_cutoff": "$branches.bc_cutoff",
-                "bc_rank": "$branches.bc_rank",
-                "bcm_initial": "$branches.bcm_initial",
-                "bcm_filled": "$branches.bcm_filled",
-                "bcm_cutoff": "$branches.bcm_cutoff",
-                "bcm_rank": "$branches.bcm_rank",
-                "mbc_initial": "$branches.mbc_initial",
-                "mbc_filled": "$branches.mbc_filled",
-                "mbc_cutoff": "$branches.mbc_cutoff",
-                "mbc_rank": "$branches.mbc_rank",
-                "sc_initial": "$branches.sc_initial",
-                "sc_filled": "$branches.sc_filled",
-                "sc_cutoff": "$branches.sc_cutoff",
-                "sc_rank": "$branches.sc_rank",
-                "sca_initial": "$branches.sca_initial",
-                "sca_filled": "$branches.sca_filled",
-                "sca_cutoff": "$branches.sca_cutoff",
-                "sca_rank": "$branches.sca_rank",
-                "st_initial": "$branches.st_initial",
-                "st_filled": "$branches.st_filled",
-                "st_cutoff": "$branches.st_cutoff",
-                "st_rank": "$branches.st_rank",
-                "_id": 0
-            }
-        })
+        # Ensure pagination parameters are valid ints
+        limit_val = limit if isinstance(limit, int) else 50
+        skip_val = skip if isinstance(skip, int) else 0
+        is_nested = nested if isinstance(nested, bool) else True
 
-        # Apply skip and limit pagination
-        pipeline.append({"$skip": skip})
-        pipeline.append({"$limit": limit})
+        if is_nested:
+            pipeline.extend([
+                {"$sort": {"branches.branch_name": 1}},
+                {
+                    "$group": {
+                        "_id": {
+                            "college_code": "$college_code",
+                            "year": "$year"
+                        },
+                        "college_name": {"$first": "$college_name"},
+                        "district": {"$first": "$district"},
+                        "college_type": {"$first": "$college_type"},
+                        "branches": {"$push": "$branches"}
+                    }
+                },
+                {"$sort": {"_id.year": -1}},
+                {
+                    "$group": {
+                        "_id": "$_id.college_code",
+                        "college_code": {"$first": "$_id.college_code"},
+                        "college_name": {"$first": "$college_name"},
+                        "district": {"$first": "$district"},
+                        "college_type": {"$first": "$college_type"},
+                        "latest_year": {"$first": "$_id.year"},
+                        "latest_branches": {"$first": "$branches"},
+                        "yearly_data": {
+                            "$push": {
+                                "k": {"$toString": "$_id.year"},
+                                "v": "$branches"
+                            }
+                        }
+                    }
+                },
+                {
+                    "$project": {
+                        "_id": 0,
+                        "college_code": 1,
+                        "code": "$college_code",
+                        "college_name": 1,
+                        "name": "$college_name",
+                        "district": 1,
+                        "college_type": 1,
+                        "type": "$college_type",
+                        "latest_year": 1,
+                        "branches": "$latest_branches",
+                        "years": {"$arrayToObject": "$yearly_data"}
+                    }
+                },
+                {"$sort": {"name": 1}},
+                {"$skip": skip_val},
+                {"$limit": limit_val}
+            ])
+        else:
+            # Flattened original schema
+            pipeline.append({
+                "$project": {
+                    "year": 1,
+                    "college_code": 1,
+                    "college_name": 1,
+                    "district": 1,
+                    "college_type": 1,
+                    "branch_code": "$branches.branch_code",
+                    "branch_name": "$branches.branch_name",
+                    "oc_initial": "$branches.oc_initial",
+                    "oc_filled": "$branches.oc_filled",
+                    "oc_cutoff": "$branches.oc_cutoff",
+                    "oc_rank": "$branches.oc_rank",
+                    "bc_initial": "$branches.bc_initial",
+                    "bc_filled": "$branches.bc_filled",
+                    "bc_cutoff": "$branches.bc_cutoff",
+                    "bc_rank": "$branches.bc_rank",
+                    "bcm_initial": "$branches.bcm_initial",
+                    "bcm_filled": "$branches.bcm_filled",
+                    "bcm_cutoff": "$branches.bcm_cutoff",
+                    "bcm_rank": "$branches.bcm_rank",
+                    "mbc_initial": "$branches.mbc_initial",
+                    "mbc_filled": "$branches.mbc_filled",
+                    "mbc_cutoff": "$branches.mbc_cutoff",
+                    "mbc_rank": "$branches.mbc_rank",
+                    "sc_initial": "$branches.sc_initial",
+                    "sc_filled": "$branches.sc_filled",
+                    "sc_cutoff": "$branches.sc_cutoff",
+                    "sc_rank": "$branches.sc_rank",
+                    "sca_initial": "$branches.sca_initial",
+                    "sca_filled": "$branches.sca_filled",
+                    "sca_cutoff": "$branches.sca_cutoff",
+                    "sca_rank": "$branches.sca_rank",
+                    "st_initial": "$branches.st_initial",
+                    "st_filled": "$branches.st_filled",
+                    "st_cutoff": "$branches.st_cutoff",
+                    "st_rank": "$branches.st_rank",
+                    "_id": 0
+                }
+            })
+
+            # Apply skip and limit pagination
+            pipeline.append({"$skip": skip_val})
+            pipeline.append({"$limit": limit_val})
 
         results = list(collection.aggregate(pipeline))
 
         return {
             "count": len(results),
+            "colleges": results,
             "results": results
         }
     except Exception as e:

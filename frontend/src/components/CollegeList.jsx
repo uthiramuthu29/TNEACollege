@@ -6,31 +6,19 @@ import { Loader2 } from "lucide-react";
 import { useSelector } from "react-redux";
 
 export default function CollegeList({ collegeSearchQuery }) {
+  const tneaCutoffQuery = useSelector((state) => state.cutoff);
 
-  const tneaCutoffQuery = useSelector(
-    (state) => state.cutoff
-  );
-
-  const {
-    data: colleges = [],
-    isLoading,
-  } = useQuery({
+  const { data: colleges = [], isLoading } = useQuery({
     queryKey: ["colleges", collegeSearchQuery],
     queryFn: () => fetchColleges(collegeSearchQuery),
     staleTime: 30 * 60 * 1000,
     gcTime: 60 * 60 * 1000,
   });
 
-  const {
-    data: admissions = [],
-    isLoading: admissionsLoading,
-  } = useQuery({
+  const { data: admissions = [], isLoading: admissionsLoading } = useQuery({
     queryKey: ["admissions", tneaCutoffQuery],
     queryFn: () => fetchAdmissions(tneaCutoffQuery),
-    enabled: Boolean(
-      tneaCutoffQuery.cutoff &&
-      tneaCutoffQuery.community
-    ),
+    enabled: Boolean(tneaCutoffQuery.cutoff && tneaCutoffQuery.community),
     staleTime: 30 * 60 * 1000,
     gcTime: 60 * 60 * 1000,
   });
@@ -38,20 +26,19 @@ export default function CollegeList({ collegeSearchQuery }) {
   console.log("TNEA Query:", tneaCutoffQuery);
   console.log("Admissions:", admissions);
 
-  const rankedColleges = getCollegeRankings(colleges);
-
   const isCutoffMode = Boolean(
-    tneaCutoffQuery.cutoff &&
-    tneaCutoffQuery.community
+    tneaCutoffQuery.cutoff && tneaCutoffQuery.community,
   );
-  
-  const isCurrentlyLoading = isCutoffMode
-    ? admissionsLoading
-    : isLoading;
+
+  const rankedColleges = getCollegeRankings(colleges);
+  const displayedColleges = isCutoffMode ? admissions : rankedColleges;
+
+  const isCurrentlyLoading = isCutoffMode ? admissionsLoading : isLoading;
 
   return (
     <>
-      <div className="college-list mt-6 flex flex-col gap-6 ">
+      <div className="college-list mt-6 flex flex-col ">
+        <p>{displayedColleges.length} out of {colleges.length}</p>
         {isCurrentlyLoading ? (
           <p className="text-center px-8 py-15  text-[#74777F] text-[14px]">
             <Loader2
@@ -60,12 +47,12 @@ export default function CollegeList({ collegeSearchQuery }) {
             />
             Loading colleges...
           </p>
-        ) : rankedColleges.length === 0 ? (
+        ) : displayedColleges.length === 0 ? (
           <p className="text-center text-[#74777F] text-[14px]">
             No colleges found
           </p>
         ) : (
-          rankedColleges.map((college) => (
+          displayedColleges.map((college) => (
             <CollegeCard key={college.code} college={college} />
           ))
         )}

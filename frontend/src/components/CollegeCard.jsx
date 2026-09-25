@@ -13,7 +13,7 @@ export default function CollegeCard({ college }) {
       whileInView={{ width: "auto", opacity: 1, x: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.8, ease: [0.25, 1, 0.5, 1] }}
-      className="college-card bg-white border border-ash-border rounded-2xl p-6 "
+      className="college-card bg-white border border-ash-border rounded-2xl p-6 mb-6 "
     >
       <img className="mb-6" src={CollegeCardImg} />
       <div className="content">

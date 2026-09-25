@@ -1,3 +1,4 @@
+import { useSelector } from "react-redux";
 import { formatCutoff, getTotalInitialSeats } from "../utils";
 
 export function CutoffTable({ college }) {
@@ -32,24 +33,54 @@ export function CutoffTable({ college }) {
   );
 }
 
-export function BranchTable({ college }) {
-    return (
-      <table className="branch-table w-full mt-2.5 bg-gray-100 rounded-lg ">
-        <thead>
-          <tr>
-            <th className="text-left" >Branch</th>
-            <th>Seats</th>
-          </tr>
-        </thead>
-        <tbody>
-          {college.branches &&
-            college.branches.map((branch, index) => (
-              <tr key={branch.branch_code || index}>
-                <td className="text-left!">{branch.branch_name}</td>
-                <td className="">{getTotalInitialSeats(branch)}</td>
-              </tr>
-            ))}
-        </tbody>
-      </table>
-    );
-  }
+export function BranchTable({ college, community: propCommunity }) {
+  const { cutoff, community: reduxCommunity } = useSelector(
+    (state) => state.cutoff
+  );
+  const community = propCommunity || reduxCommunity;
+  const isCutoffMode = Boolean(cutoff && community);
+  const isCommunityNotOC = community?.toLowerCase() !== "oc";
+  const communityCutoffKey = community
+    ? `${community.toLowerCase()}_cutoff`
+    : null;
+
+  return (
+    <table className="branch-table w-full mt-2.5 bg-gray-100 rounded-lg ">
+      <thead>
+        <tr>
+          <th className="text-left">Branch</th>
+          {isCutoffMode && (
+            <>
+              <th className="text-center">OC Cutoff</th>
+              {isCommunityNotOC && (
+                <th className="text-center">{community.toUpperCase()} Cutoff</th>
+              )}
+            </>
+          )}
+          <th>Seats</th>
+        </tr>
+      </thead>
+      <tbody>
+        {college.branches &&
+          college.branches.map((branch, index) => (
+            <tr key={branch.branch_code || index}>
+              <td className="text-left!">{branch.branch_name}</td>
+              {isCutoffMode && (
+                <>
+                  <td className="text-center font-medium">
+                    {formatCutoff(branch.oc_cutoff)}
+                  </td>
+                  {isCommunityNotOC && (
+                    <td className="text-center font-medium">
+                      {formatCutoff(branch[communityCutoffKey])}
+                    </td>
+                  )}
+                </>
+              )}
+              <td className="text-center">{getTotalInitialSeats(branch)}</td>
+            </tr>
+          ))}
+      </tbody>
+    </table>
+  );
+}
