@@ -9,8 +9,8 @@ export default function TopColleges() {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const { data: colleges = [], isLoading } = useQuery({
-    queryKey: ["colleges", ""],
-    queryFn: () => fetchColleges(""),
+    queryKey: ["colleges"],
+    queryFn: () => fetchColleges({}),
     staleTime: 30 * 60 * 1000,
     gcTime: 60 * 60 * 1000,
     select: (data) =>
